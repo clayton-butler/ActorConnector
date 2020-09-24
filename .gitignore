@@ -122,3 +122,17 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# OSX
+.DS_Store
+
+# batch files
+.tsv
+.csv
+
+# editor
+.idea/
+.editorconfig
+
+# npm
+node_modules/
