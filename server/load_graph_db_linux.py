@@ -12,7 +12,7 @@ import_directory = '/var/lib/neo4j/import/'
 
 def move_to_import(import_dir, filename):
     full_path = os.path.abspath(filename)
-    os.system(f'sudo cp {full_path} {import_dir}')
+    os.system(f'sudo mv {full_path} {import_dir}')
     os.system(f'sudo chown neo4j:adm {import_dir}{filename}')
 
 def split_batch_file(batch_dir, filename):
