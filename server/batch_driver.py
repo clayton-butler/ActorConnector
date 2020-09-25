@@ -2,6 +2,7 @@ import os
 import gzip
 import shutil
 import requests
+import sys
 from dotenv import load_dotenv
 from batch_converter import BatchConverter
 from actor_graph import ActorGraph
@@ -11,6 +12,7 @@ from actor_graph import ActorGraph
 #   set dbms.memory.heap.initial_size=2G
 #   set dbms.memory.heap.max_size=4G
 #   set dbms.memory.pagecache.size=4G
+#   set dbms.security.procedures.unrestricted=apoc.*
 #
 # this script assumes a fresh db
 
@@ -76,22 +78,61 @@ with BatchConverter(imdb_dir, batch_dir) as converter:
 
 # load graph db
 # -------------------------------------
+
+# some bug in the ubuntu neo4j distribution disallows
+# loading files from arbitrary file system locations
+def move_to_import(filename):
+    full_path = os.path.abspath(os.path.join(batch_dir, filename))
+    os.system(f'sudo cp {full_path} /var/lib/neo4j/import/')
+    os.system((f'sudo chown neo4j:adm /var/lib/neo4j/import/{filename}'))
+
+
 with ActorGraph(db_user, db_pass) as graph:
     print('db insert start')
     print('creating indexes ...')
     graph.init_indexes()
     print('creating movies ...')
-    graph.add_movies_from_batch_file(os.path.join(batch_dir, 'movie_batch.tsv'))
+    movie_file = 'movie_batch.tsv'
+    if sys.platform == 'linux':
+        move_to_import(movie_file)
+    else:
+        movie_file = os.path.join(batch_dir, movie_file)
+    graph.add_movies_from_batch_file(movie_file)
     print('creating episodes ...')
-    graph.add_episodes_from_batch_file(os.path.join(batch_dir, 'episode_batch.tsv'))
+    episode_file = 'episode_batch.tsv'
+    if sys.platform == 'linux':
+        move_to_import(episode_file)
+    else:
+        episode_file = os.path.join(batch_dir, episode_file)
+    graph.add_episode_from_batch_file(episode_file)
     print('creating series ...')
-    graph.add_series_from_batch_file(os.path.join(batch_dir, 'series_batch.tsv'))
+    series_file = 'series_batch.tsv'
+    if sys.platform == 'linux':
+        move_to_import(series_file)
+    else:
+        series_file = os.path.join(batch_dir, series_file)
+    graph.add_series_from_batch_file(series_file)
     print('creating actors ...')
-    graph.add_actors_from_batch_file(os.path.join(batch_dir, 'actor_batch.tsv'))
+    actor_file = 'actor_batch.tsv'
+    if sys.platform == 'linux':
+        move_to_import(actor_file)
+    else:
+        actor_file = os.path.join(batch_dir, actor_file)
+    graph.add_actors_from_batch_file(actor_file)
     print('creating actor relations ...')
-    graph.add_actor_relations_from_batch_file(os.path.join(batch_dir, 'actor_relation_batch.tsv'))
+    actor_relation_file = 'actor_relation_batch.tsv'
+    if sys.platform == 'linux':
+        move_to_import(actor_relation_file)
+    else:
+        actor_relation_file = os.path.join(batch_dir, actor_relation_file)
+    graph.add_actor_relations_from_batch_file(actor_relation_file)
     print('creating episode relations ...')
-    graph.add_episode_relations_from_batch_file(os.path.join(batch_dir, 'episode_relation_batch.tsv'))
+    episode_relation_file = 'episode_relation_batch.tsv'
+    if sys.platform == 'linux':
+        move_to_import(episode_relation_file)
+    else:
+        episode_relation_file = os.path.join(batch_dir, episode_relation_file)
+    graph.add_episode_relations_from_batch_file(episode_relation_file)
     print('db insert end')
     # print('deleting orphan nodes ...')
     # graph.delete_orphans()

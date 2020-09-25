@@ -54,11 +54,6 @@ class ActorGraph:
         result = session.run(query, {'actor_id': actor_id})
         return result.single().data()
 
-    def __os_convert_file_path(self, filename):
-        if sys.platform == 'linux':
-            return filename.lstrip('/')
-        return filename
-
     def drop_all_nodes(self):
         with self.driver.session() as session:
             query = 'CALL apoc.periodic.iterate("MATCH (n) RETURN n", "DETACH DELETE n", {batchSize:100000})'
@@ -100,7 +95,8 @@ class ActorGraph:
             session.run(query)
 
     def add_actors_from_batch_file(self, filename):
-        filename = self.__os_convert_file_path(os.path.abspath(filename))
+        if not sys.platform == 'linux':
+            filename = os.path.abspath(filename)
         query = f"""
                 USING PERIODIC COMMIT 100000
                 LOAD CSV WITH HEADERS FROM 'file:///{filename}' as line FIELDTERMINATOR '\t'
@@ -124,7 +120,8 @@ class ActorGraph:
             session.run(query, {'name_id': name_id, 'name': name, 'birth_year': birth_year, 'death_year': death_year})
 
     def add_movies_from_batch_file(self, filename):
-        filename = self.__os_convert_file_path(os.path.abspath(filename))
+        if not sys.platform == 'linux':
+            filename = os.path.abspath(filename)
         query = f"""
                 USING PERIODIC COMMIT 100000
                 LOAD CSV WITH HEADERS FROM 'file:///{filename}' as line FIELDTERMINATOR '\t'
@@ -146,7 +143,8 @@ class ActorGraph:
             session.run(query, {'title_id': title_id, 'title': title, 'year': year})
 
     def add_series_from_batch_file(self, filename):
-        filename = self.__os_convert_file_path(os.path.abspath(filename))
+        if not sys.platform == 'linux':
+            filename = os.path.abspath(filename)
         query = f"""
                 USING PERIODIC COMMIT 100000
                 LOAD CSV WITH HEADERS FROM 'file:///{filename}' as line FIELDTERMINATOR '\t'
@@ -169,7 +167,8 @@ class ActorGraph:
             session.run(query, {'title_id': title_id, 'title': title, 'start_year': start_year, 'end_year': end_year})
 
     def add_episodes_from_batch_file(self, filename):
-        filename = self.__os_convert_file_path(os.path.abspath(filename))
+        if not sys.platform == 'linux':
+            filename = os.path.abspath(filename)
         query = f"""
                 USING PERIODIC COMMIT 100000
                 LOAD CSV WITH HEADERS FROM 'file:///{filename}' as line FIELDTERMINATOR '\t'
@@ -191,7 +190,8 @@ class ActorGraph:
             session.run(query, {'title_id': title_id, 'title': title, 'year': year})
 
     def add_actor_relations_from_batch_file(self, filename):
-        filename = self.__os_convert_file_path(os.path.abspath(filename))
+        if not sys.platform == 'linux':
+            filename = os.path.abspath(filename)
         query = f"""
                 USING PERIODIC COMMIT 100000
                 LOAD CSV WITH HEADERS FROM 'file:///{filename}' as line FIELDTERMINATOR '\t'
@@ -218,7 +218,8 @@ class ActorGraph:
             session.run(query, {'title_id': title_id, 'actor_id': actor_id, 'roles': roles})
 
     def add_episode_relations_from_batch_file(self, filename):
-        filename = self.__os_convert_file_path(os.path.abspath(filename))
+        if not sys.platform == 'linux':
+            filename = os.path.abspath(filename)
         query = f"""
                 USING PERIODIC COMMIT 100000
                 LOAD CSV WITH HEADERS FROM 'file:///{filename}' as line FIELDTERMINATOR '\t'
