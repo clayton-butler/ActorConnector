@@ -92,10 +92,10 @@ class ActorGraph:
     def drop_indexes(self):
         with self.driver.session() as session:
             for index in self.indexes:
-                query = f"DROP INDEX {index.index_name}"
+                query = f"DROP INDEX {index['index_name']}"
                 session.run(query)
             for constraint in self.constraints:
-                query = f"DROP CONSTRAINT {constraint.constraint_name}"
+                query = f"DROP CONSTRAINT {constraint['constraint_name']}"
                 session.run(query)
 
     def delete_orphans(self):
