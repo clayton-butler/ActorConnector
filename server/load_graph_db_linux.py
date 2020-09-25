@@ -10,8 +10,8 @@ imdb_directory = 'imdb_files'
 batch_directory = 'batch_files'
 import_directory = '/var/lib/neo4j/import/'
 
-def move_to_import(import_dir, filename):
-    full_path = os.path.abspath(filename)
+def move_to_import(import_dir, batch_dir, filename):
+    full_path = os.path.abspath(os.path.join(batch_dir, filename))
     os.system(f'sudo mv {full_path} {import_dir}')
     os.system(f'sudo chown neo4j:adm {import_dir}{filename}')
 
@@ -49,31 +49,31 @@ with ActorGraph(db_user, db_pass) as graph:
     print('creating movies ...')
     movie_files = split_batch_file(batch_directory, 'movie_batch.tsv')
     for file in movie_files:
-        move_to_import(import_directory, os.path.basename(file))
+        move_to_import(import_directory, batch_directory, os.path.basename(file))
         graph.add_movies_from_batch_file(os.path.basename(file))
     print('creating episodes ...')
     episode_files = split_batch_file(batch_directory, 'episode_batch.tsv')
     for file in episode_files:
-        move_to_import(import_directory, os.path.basename(file))
+        move_to_import(import_directory, batch_directory, os.path.basename(file))
         graph.add_episodes_from_batch_file(os.path.basename(file))
     print('creating series ...')
     series_files = split_batch_file(batch_directory, 'series_batch.tsv')
     for file in series_files:
-        move_to_import(import_directory, os.path.basename(file))
+        move_to_import(import_directory, batch_directory, os.path.basename(file))
         graph.add_series_from_batch_file(os.path.basename(file))
     print('creating actors ...')
     actor_files = split_batch_file(batch_directory, 'actor_batch.tsv')
     for file in actor_files:
-        move_to_import(import_directory, os.path.basename(file))
+        move_to_import(import_directory, batch_directory, os.path.basename(file))
         graph.add_actors_from_batch_file(os.path.basename(file))
     print('creating actor relations ...')
     actor_relation_files = split_batch_file(batch_directory, 'actor_relation_batch.tsv')
     for file in actor_relation_files:
-        move_to_import(import_directory, os.path.basename(file))
+        move_to_import(import_directory, batch_directory, os.path.basename(file))
         graph.add_actor_relations_from_batch_file(os.path.basename(file))
     print('creating episode relations ...')
     episode_relation_files = split_batch_file(batch_directory, 'episode_relations_batch.tsv')
     for file in episode_relation_files:
-        move_to_import(import_directory, os.path.basename(file))
+        move_to_import(import_directory, batch_directory, os.path.basename(file))
         graph.add_episode_relations_from_batch_file(os.path.basename(file))
     print('db insert end')
