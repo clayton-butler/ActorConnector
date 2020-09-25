@@ -104,7 +104,7 @@ with ActorGraph(db_user, db_pass) as graph:
         move_to_import(episode_file)
     else:
         episode_file = os.path.join(batch_dir, episode_file)
-    graph.add_episode_from_batch_file(episode_file)
+    graph.add_episodes_from_batch_file(episode_file)
     print('creating series ...')
     series_file = 'series_batch.tsv'
     if sys.platform == 'linux':
