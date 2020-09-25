@@ -8,22 +8,6 @@ class ActorGraph:
     def __init__(self, username, password):
         load_dotenv()
         self.driver = GraphDatabase.driver(os.getenv('NEO4J_HOST'), auth=(username, password))
-        self.constraints = [
-            {'label': 'Person', 'prop': 'name_id', 'constraint_name': 'person_name_id'},
-            {'label': 'Actor', 'prop': 'name_id', 'constraint_name': 'actor_name_id'},
-            {'label': 'Production', 'prop': 'title_id', 'constraint_name': 'production_title_id'},
-            {'label': 'Movie', 'prop': 'title_id', 'constraint_name': 'movie_title_id'},
-            {'label': 'Episode', 'prop': 'title_id', 'constraint_name': 'episode_title_id'},
-            {'label': 'Series', 'prop': 'title_id', 'constraint_name': 'series_title_id'}
-        ]
-        self.indexes = [
-            {'label': 'Person', 'prop': 'name', 'index_name': 'person_name'},
-            {'label': 'Actor', 'prop': 'name', 'index_name': 'actor_name'},
-            {'label': 'Production', 'prop': 'title', 'index_name': 'production_title'},
-            {'label': 'Movie', 'prop': 'title', 'index_name': 'movie_title'},
-            {'label': 'Episode', 'prop': 'title', 'index_name': 'episode_title'},
-            {'label': 'Series', 'prop': 'title', 'index_name': 'series_title'}
-        ]
 
     def __enter__(self):
         return self
@@ -81,22 +65,34 @@ class ActorGraph:
             session.run(query)
 
     def init_indexes(self):
+        constraints = [
+            {'label': 'Person', 'prop': 'name_id', 'constraint_name': 'person_name_id'},
+            {'label': 'Actor', 'prop': 'name_id', 'constraint_name': 'actor_name_id'},
+            {'label': 'Production', 'prop': 'title_id', 'constraint_name': 'production_title_id'},
+            {'label': 'Movie', 'prop': 'title_id', 'constraint_name': 'movie_title_id'},
+            {'label': 'Episode', 'prop': 'title_id', 'constraint_name': 'episode_title_id'},
+            {'label': 'Series', 'prop': 'title_id', 'constraint_name': 'series_title_id'}
+        ]
+        indexes = [
+            {'label': 'Person', 'prop': 'name', 'index_name': 'person_name'},
+            {'label': 'Actor', 'prop': 'name', 'index_name': 'actor_name'},
+            {'label': 'Production', 'prop': 'title', 'index_name': 'production_title'},
+            {'label': 'Movie', 'prop': 'title', 'index_name': 'movie_title'},
+            {'label': 'Episode', 'prop': 'title', 'index_name': 'episode_title'},
+            {'label': 'Series', 'prop': 'title', 'index_name': 'series_title'}
+        ]
         with self.driver.session() as session:
-            for params in self.constraints:
+            for params in constraints:
                 constraint_query = f"CREATE CONSTRAINT {params['constraint_name']} ON (l:{params['label']}) ASSERT l.{params['prop']} IS UNIQUE"
                 session.run(constraint_query)
-            for params in self.indexes:
+            for params in indexes:
                 index_query = f"CREATE INDEX {params['index_name']} FOR (l:{params['label']}) ON (l.{params['prop']})"
                 session.run(index_query)
 
     def drop_indexes(self):
         with self.driver.session() as session:
-            for index in self.indexes:
-                query = f"DROP INDEX {index['index_name']}"
-                session.run(query)
-            for constraint in self.constraints:
-                query = f"DROP CONSTRAINT {constraint['constraint_name']}"
-                session.run(query)
+            query = 'CALL apoc.schema.assert({},{},true)'
+            session.run(query)
 
     def delete_orphans(self):
         query = 'MATCH (n) WHERE NOT (n)--() DELETE n'
