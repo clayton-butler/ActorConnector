@@ -207,5 +207,10 @@ def get_random_actor():
 
     return jsonify(response_obj)
 
+@app.route('/', methods={'GET'})
+def default():
+    return jsonify({'status': 'success'})
+
+
 if __name__ == '__main__':
     app.run()

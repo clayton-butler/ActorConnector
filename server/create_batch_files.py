@@ -2,6 +2,7 @@ import os
 import gzip
 import shutil
 import requests
+import sys
 from dotenv import load_dotenv
 from batch_converter import BatchConverter
 from actor_graph import ActorGraph
@@ -11,6 +12,7 @@ from actor_graph import ActorGraph
 #   set dbms.memory.heap.initial_size=2G
 #   set dbms.memory.heap.max_size=4G
 #   set dbms.memory.pagecache.size=4G
+#   set dbms.security.procedures.unrestricted=apoc.*
 #
 # this script assumes a fresh db
 
@@ -73,27 +75,3 @@ with BatchConverter(imdb_dir, batch_dir) as converter:
     print('converting roles ...')
     converter.convert_title_principals('title.principals.tsv')
     print('batch convert end')
-
-# load graph db
-# -------------------------------------
-with ActorGraph(db_user, db_pass) as graph:
-    print('db insert start')
-    print('creating indexes ...')
-    graph.init_indexes()
-    print('creating movies ...')
-    graph.add_movies_from_batch_file(os.path.join(batch_dir, 'movie_batch.tsv'))
-    print('creating episodes ...')
-    graph.add_episodes_from_batch_file(os.path.join(batch_dir, 'episode_batch.tsv'))
-    print('creating series ...')
-    graph.add_series_from_batch_file(os.path.join(batch_dir, 'series_batch.tsv'))
-    print('creating actors ...')
-    graph.add_actors_from_batch_file(os.path.join(batch_dir, 'actor_batch.tsv'))
-    print('creating actor relations ...')
-    graph.add_actor_relations_from_batch_file(os.path.join(batch_dir, 'actor_relation_batch.tsv'))
-    print('creating episode relations ...')
-    graph.add_episode_relations_from_batch_file(os.path.join(batch_dir, 'episode_relation_batch.tsv'))
-    print('db insert end')
-    # print('deleting orphan nodes ...')
-    # graph.delete_orphans()
-
-print('graph database load complete')
