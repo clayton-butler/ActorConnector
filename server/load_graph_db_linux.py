@@ -72,7 +72,7 @@ with ActorGraph(db_user, db_pass) as graph:
         move_to_import(import_directory, batch_directory, os.path.basename(file))
         graph.add_actor_relations_from_batch_file(os.path.basename(file))
     print('creating episode relations ...')
-    episode_relation_files = split_batch_file(batch_directory, 'episode_relations_batch.tsv')
+    episode_relation_files = split_batch_file(batch_directory, 'episode_relation_batch.tsv')
     for file in episode_relation_files:
         move_to_import(import_directory, batch_directory, os.path.basename(file))
         graph.add_episode_relations_from_batch_file(os.path.basename(file))
