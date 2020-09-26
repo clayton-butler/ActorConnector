@@ -26,6 +26,7 @@ export default {
   components: {
     card: Card,
   },
+  inject: ['global_base_url'],
   props: [
     'title',
     'year',
@@ -39,7 +40,7 @@ export default {
     },
     poster_img_url() {
       if (!this.img_url) {
-        return 'http://localhost:8080/img/tv.png';
+        return `${this.global_base_url}/img/tv.png`;
       }
       return this.img_url;
     },

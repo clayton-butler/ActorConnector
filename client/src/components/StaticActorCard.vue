@@ -26,6 +26,7 @@ import Card from '@/components/Card.vue';
 
 export default {
   name: 'StaticActorCard',
+  inject: ['global_base_url'],
   components: {
     card: Card,
   },
@@ -56,7 +57,7 @@ export default {
     },
     profile_img_url() {
       if (!this.img_url) {
-        return 'http://localhost:8080/img/person-fill.png';
+        return `${this.global_base_url}/img/person-fill.png`;
       }
       return this.img_url;
     },

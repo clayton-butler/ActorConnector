@@ -19,4 +19,8 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   render: (h) => h(App),
+  provide: {
+    global_base_url: process.env.VUE_APP_BASEURL,
+    global_api_url: process.env.VUE_APP_APIURL,
+  },
 }).$mount('#app');
