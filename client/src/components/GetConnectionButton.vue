@@ -35,5 +35,7 @@ export default {
   }
   .bottom-arrow {
     margin: 0;
+    position: relative;
+    z-index: -9999;
   }
 </style>
