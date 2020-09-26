@@ -93,6 +93,7 @@ export default {
     'actor-role': ActorRole,
     'small-card': SmallCard,
   },
+  inject: ['global_api_url'],
   props: [
     'show_connection',
     'first_actor_id',
@@ -122,7 +123,7 @@ export default {
   },
   methods: {
     create_connection() {
-      const path = `http://localhost:5000/actor/connection/${this.first_actor_id}/${this.second_actor_id}/${this.max_search_depth}`;
+      const path = `${this.global_api_url}/actor/connection/${this.first_actor_id}/${this.second_actor_id}/${this.max_search_depth}`;
       axios.get(path)
         .then((res) => {
           this.connections = res.data.connection;

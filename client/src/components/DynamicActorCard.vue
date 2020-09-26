@@ -31,6 +31,10 @@ export default {
   components: {
     card: Card,
   },
+  inject: [
+    'global_base_url',
+    'global_api_url',
+  ],
   data() {
     return {
       actor: {
@@ -65,7 +69,7 @@ export default {
     },
     profile_img_url() {
       if (!this.actor.img_url) {
-        return 'http://localhost:8080/img/person-fill.png';
+        return `${this.global_base_url}/img/person-fill.png`;
       }
       return this.actor.img_url;
     },
@@ -80,7 +84,7 @@ export default {
   },
   methods: {
     getActorInfo() {
-      const path = `http://localhost:5000/actor/${this.tmdb_id}`;
+      const path = `${this.global_api_url}/actor/${this.tmdb_id}`;
       axios.get(path)
         .then((res) => {
           this.actor.name = this.name;

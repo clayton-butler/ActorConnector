@@ -183,8 +183,9 @@ def get_graph_totals():
 
     return jsonify(response_obj)
 
-@app.route('/actor/random', methods={'GET'})
-def get_random_actor():
+# need cache busting random var so safari does not cache results
+@app.route('/actor/random/<cache_buster>', methods={'GET'})
+def get_random_actor(cache_buster):
     response_obj = {'status': 'success'}
     if request.method == 'GET':
         with ActorGraph(db_user, db_pass) as graph:

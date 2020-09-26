@@ -26,7 +26,7 @@
       <template slot="suggestion" slot-scope="{ data, htmlText }">
         <div class="d-flex align-items-center">
           <img v-if="data.profile_path" :src="data.profile_path"/>
-          <img v-else src="http://localhost:8080/img/person-fill-small.png">
+          <img v-else :src="`${global_base_url}/img/person-fill-small.png`">
           <span class="ml-4" v-html="htmlText"></span>
         </div>
       </template>
@@ -44,6 +44,10 @@ export default {
   components: {
     'vue-typeahead-bootstrap': VueTypeaheadBootstrap,
   },
+  inject: [
+    'global_base_url',
+    'global_api_url',
+  ],
   data() {
     return {
       query: '',
@@ -63,7 +67,7 @@ export default {
         // this.show_loading_animation = true;
         this.button_state = 'loading';
       }
-      const path = `http://localhost:5000/actor/search/${this.query}`;
+      const path = `${this.global_api_url}/actor/search/${this.query}`;
       axios.get(path)
         .then((res) => {
           this.actors = res.data.actor_list;
@@ -89,7 +93,7 @@ export default {
     },
     selectRandom() {
       this.button_state = 'loading';
-      const path = 'http://localhost:5000/actor/random';
+      const path = `${this.global_api_url}/actor/random/${new Date().getTime()}`;
       axios.get(path)
         .then((res) => {
           this.selected_actor.tmdb_id = res.data.rand.tmdb_id;

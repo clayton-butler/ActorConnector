@@ -48,6 +48,7 @@ export default {
   components: {
     'ac-header': Header,
   },
+  inject: ['global_api_url'],
   data() {
     return {
       actor_count: '',
@@ -58,7 +59,7 @@ export default {
     };
   },
   mounted() {
-    const path = 'http://localhost:5000/graph/totals';
+    const path = `${this.global_api_url}/graph/totals`;
     axios.get(path)
       .then((res) => {
         this.actor_count = res.data.totals.actor_count;
