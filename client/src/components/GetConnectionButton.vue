@@ -1,10 +1,10 @@
 <template>
   <div class="justify-content-center">
-    <p class="h3" style="margin-bottom: 0">
+    <p class="h3 top-arrow">
       <b-icon-arrow-up shift-v="-5"></b-icon-arrow-up>
     </p>
     <b-button variant="outline-secondary"
-              style="margin: 0;"
+              class="connect-button"
               @click="$emit('get-connection-button-clicked')"
               :disabled="loading"
     >
@@ -12,7 +12,7 @@
       <span v-if="loading">Finding Connection ...</span>
       <b-img v-if="loading" src="/img/loading-connection.gif" width="100px" height="75px"></b-img>
     </b-button>
-    <p class="h3" style="margin: 0">
+    <p class="h3 bottom-arrow">
       <b-icon-arrow-down shift-v="4"></b-icon-arrow-down>
     </p>
   </div>
@@ -26,5 +26,14 @@ export default {
 </script>
 
 <style scoped>
-
+  .connect-button {
+    margin: 0;
+    background-color: white;
+  }
+  .top-arrow {
+    margin-bottom: 0;
+  }
+  .bottom-arrow {
+    margin: 0;
+  }
 </style>
