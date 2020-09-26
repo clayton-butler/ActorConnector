@@ -93,7 +93,7 @@ export default {
     },
     selectRandom() {
       this.button_state = 'loading';
-      const path = `${this.global_api_url}/actor/random`;
+      const path = `${this.global_api_url}/actor/random/${new Date().getTime()}`;
       axios.get(path)
         .then((res) => {
           this.selected_actor.tmdb_id = res.data.rand.tmdb_id;
