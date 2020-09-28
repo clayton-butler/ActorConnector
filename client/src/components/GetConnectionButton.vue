@@ -29,6 +29,7 @@ export default {
   .connect-button {
     margin: 0;
     background-color: white;
+    opacity: 100 !important;
   }
   .top-arrow {
     margin-bottom: 0;

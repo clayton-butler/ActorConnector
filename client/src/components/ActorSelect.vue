@@ -14,7 +14,7 @@
                     @click="selectRandom"
                     v-b-tooltip.hover
                     title="Select a random actor">
-            <b-icon-dice6></b-icon-dice6>
+            <b-icon-shuffle></b-icon-shuffle>
           </b-button>
           <b-button v-else-if="button_state === 'loading'" disabled>
             <b-spinner class="loading_spinner my-auto" small></b-spinner>
