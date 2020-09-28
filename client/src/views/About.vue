@@ -5,7 +5,7 @@
       <b-row>
         <b-col></b-col>
         <b-col md="5">
-          <div class="about-section">
+          <div>
             <h3 class="section-header">About</h3>
             <hr>
             <p class="text-left">
@@ -20,7 +20,7 @@
               {{series_count.toLocaleString()}} TV shows.
             </p>
           </div>
-          <div class="about-section">
+          <div>
           <h3 class="section-header">Credits</h3>
           <hr>
           Actor, movie, and television show information <br>courtesy of
@@ -98,7 +98,5 @@ export default {
 <style scoped>
   .section-header {
     margin-top: 2em;
-  }
-  about-section {
   }
 </style>

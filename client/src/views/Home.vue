@@ -12,6 +12,9 @@
             <b-icon-arrow-clockwise></b-icon-arrow-clockwise>
             Reset
           </b-button>
+          <b-collapse v-model="showInstructions">
+            <instructions></instructions>
+          </b-collapse>
           <b-collapse id="first-actor-collapse" v-model="first_actor_show">
             <dynamic-actor-card :name="first_actor.name"
                                 :tmdb_id="first_actor.tmdb_id"
@@ -72,6 +75,7 @@ import DynamicActorCard from '@/components/DynamicActorCard.vue';
 import Connection from '@/components/Connection.vue';
 import GetConnectionButton from '@/components/GetConnectionButton.vue';
 import OptionsModal from '@/components/OptionsModal.vue';
+import Instructions from '@/components/Instructions.vue';
 
 export default {
   name: 'Home',
@@ -111,6 +115,7 @@ export default {
     'actor-connection': Connection,
     'get-connection-button': GetConnectionButton,
     'options-modal': OptionsModal,
+    instructions: Instructions,
   },
   methods: {
     createConnection() {
@@ -154,6 +159,14 @@ export default {
       this.$smoothScroll({
         scrollTo: document.getElementById('top'),
       });
+    },
+  },
+  computed: {
+    showInstructions() {
+      if (this.first_actor.name || this.second_actor.name) {
+        return false;
+      }
+      return true;
     },
   },
   watch: {
