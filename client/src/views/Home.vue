@@ -61,6 +61,7 @@
                          class="options-modal"
                          v-show="show_options_button">
           </options-modal>
+          <error-modal :message="error_message"></error-modal>
         </b-col>
         <b-col></b-col>
       </b-row>
@@ -76,6 +77,7 @@ import Connection from '@/components/Connection.vue';
 import GetConnectionButton from '@/components/GetConnectionButton.vue';
 import OptionsModal from '@/components/OptionsModal.vue';
 import Instructions from '@/components/Instructions.vue';
+import ErrorModal from '@/components/ErrorModal.vue';
 
 export default {
   name: 'Home',
@@ -106,6 +108,7 @@ export default {
       enable_animations: true,
       max_search_depth: 20,
       show_options_button: true,
+      error_message: '',
     };
   },
   components: {
@@ -116,13 +119,19 @@ export default {
     'get-connection-button': GetConnectionButton,
     'options-modal': OptionsModal,
     instructions: Instructions,
+    'error-modal': ErrorModal,
   },
   methods: {
     createConnection() {
-      this.connection_loading = true;
-      this.show_connection = true;
-      this.first_input_show = false;
-      this.second_input_show = false;
+      if (this.first_actor.name && this.second_actor.name) {
+        this.connection_loading = true;
+        this.show_connection = true;
+        this.first_input_show = false;
+        this.second_input_show = false;
+      } else {
+        this.error_message = 'Must select two actors';
+        this.$bvModal.show('error-modal');
+      }
     },
     hideInputElements() {
       this.show_connection_button = false;

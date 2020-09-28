@@ -30,6 +30,7 @@ export default {
     margin: 0;
     background-color: white;
     opacity: 100 !important;
+    color: inherit;
   }
   .top-arrow {
     margin-bottom: 0;
